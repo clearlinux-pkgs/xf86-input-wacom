@@ -4,7 +4,7 @@
 #
 Name     : xf86-input-wacom
 Version  : 0.33.0
-Release  : 2
+Release  : 3
 URL      : http://downloads.sourceforge.net/project/linuxwacom/xf86-input-wacom/xf86-input-wacom-0.33.0.tar.bz2
 Source0  : http://downloads.sourceforge.net/project/linuxwacom/xf86-input-wacom/xf86-input-wacom-0.33.0.tar.bz2
 Summary  : X.Org Wacom Tablet driver.
