@@ -1,3 +1,317 @@
+commit 267e74cd1325f250185ced951914220bc4287ecf
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Mar 9 08:30:39 2017 +1000
+
+    wacom 0.34.2
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 64991c8b8f8e6fadb8843960d89570d81d470b63
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Mar 9 08:28:36 2017 +1000
+
+    test: add TimerCancel to fake symbols
+    
+    Fixes distcheck
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit da26ba09c91241c432765de3e18ae4f216749029
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Mar 9 07:11:18 2017 +1000
+
+    wacom 0.34.1
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit de650d6224b353ee5596f5ce65de8059db5cd289
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Fri Feb 24 14:11:35 2017 +1000
+
+    Cancel timers on DEVICE_OFF
+    
+    Otherwise we run the risk of having a timer trigger after we removed the
+    device. Since we pass InputInfoPtrs and WacomDevicePtrs to the timers as
+    arguments, these may have been freed by the time a timer triggers.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Jason Gerecke <jason.gerecke@wacom.com>
+
+commit f65d97362813ea89d18e5049ad87bc468ec30f85
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Feb 23 09:47:27 2017 +1000
+
+    Revert to Update properties with a timer func
+    
+    This was required when we only had the SIGIO handler because sending events
+    allocates memory and things break. Now with the input thread we *can* send
+    events from within the thread but it can mess up other delivery.
+    
+    https://bugs.freedesktop.org/show_bug.cgi?id=99887
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Acked-by: Jason Gerecke <jason.gerecke@wacom.com>
+
+commit 23f9586779f94cacb899120ef426d8fcd1647dcb
+Author: Ping Cheng <pinglinux@gmail.com>
+Date:   Fri Feb 10 21:53:01 2017 -0800
+
+    Make sibling device name matching slightly more lenient
+    
+    The wcmIsSiblingDevice function uses several tricks to try and determine
+    if two devices should be considered siblings. If its 'logical_only'
+    parameter is false, this includes comparing device names. Device name
+    comparison is complicated by the fact that suffixes are added on by
+    the X and kernel drivers. To deal with this, the wcmSplitName function
+    tries to split a device name into three pieces: its "basename" that
+    describes the model, its "subdevice" name that describes the interface,
+    and its "tool" name which describes the X11 tool.
+    
+    Spliting the name is a somewhat kludgy process which does not properly
+    handle the device names for the MobileStudio Pro or Cintiq Pro. The
+    kernel reads the name of these devices directly from the hardware's
+    descriptors, and the names are slightly different between the pen and
+    touch interfaces (the touch device has an extra "Touch" suffix).
+    
+    This patch tweaks how wcmSplitName breaks apart device names in order
+    to handle the MobileStudio Pro and Cintiq Pro. Specifically, it now
+    allows the "subdevice" to contain an arbitrary number of "Pen", "Finger",
+    :Touch", or "Pad" suffixes. For the MobileStudio Pro and Cintiq Pro,
+    this should allow the "basename" that is considered for sibling device
+    matches to be identical between both the pen and touch interfaces.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Signed-off-by: Ping Cheng <ping.cheng@wacom.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f0dedf7a610ac97bc45738492b98ce4f1e0514ec
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Wed Jan 18 09:00:10 2017 -0800
+
+    tests: Fix compilation under ABI 25 and greater
+    
+    The X server recently deprecated xf86BlockSIGIO and xf86UnblockSIGIO and
+    simultaneously defined them inline within xf86.h. The new inline definition
+    causes problems both because fake-symbols.c will end up redefining them,
+    and because the function bodies reference a symbol that does not get included
+    when building the tests. To fix these errors, update fake-symbols.c with
+    updated include guards and a definition of the undefined symbols.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 6ff54b3020268f7baf8f1e748a6e278126472c58
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Mon Dec 5 11:14:08 2016 -0800
+
+    wacom 0.34.0
+    
+    Signed-off-by: Jason Gerecke <killertofu@gmail.com>
+
+commit 3ad7e9e6bfce19f630fc2902dfcceb53b912ae1f
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Fri Nov 18 15:21:58 2016 -0800
+
+    wacom 0.33.99.1
+    
+    Signed-off-by: Jason Gerecke <killertofu@gmail.com>
+
+commit 051a406583a93cad2ec34a3fb03885237cd1a23e
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Tue Nov 1 09:02:21 2016 -0700
+
+    Add missing newline to log message
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5bd8f70b9b3d6266e4c8e3c0ffd408d2c2e3c365
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Fri Nov 11 08:43:31 2016 -0800
+
+    Further reduce arbitration priority of cursor devices
+    
+    Cursor (puck) devices are typically left on the sensor and can emit
+    spurious events that can potentially cause the driver to steal "active"
+    status from another tool. In the past we'd only considered the case where
+    the active tool was a touch but it is reasonable to extend this logic to
+    other tool types. If a cursor emits a spurious event in the middle of a
+    pen dragging, for example, the drag will momentarily stop as the pen is
+    temporarily sent out of prox -- with potentially disasterous results.
+    Additionally, when the pen "returns" in prox on the next event, any
+    currently-applied pressure will be taken as the preload and result in
+    incorrect pressure scaling until the pen is removed from contact.
+    
+    This commit removes the "IsTouch" conditions from the handling of
+    spurious cursor events in check_arbitrated_control. The result is that a
+    cursor will not be granted "active" status in preference to any other
+    tool (and will drop "active" status if gained after 100ms and while
+    no buttons are pressed).
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 9433019e82b6e3ac5c2ca21ae4fabbb8a6756e38
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Tue Nov 1 10:55:58 2016 -0700
+
+    Allow cursor devices to maintain "active" status while buttons are down
+    
+    Cursor (puck) tools tend to be left on the sensor, preventing us from
+    being able to rely solely on proximity information to determine if
+    they are being actively used. In the past we've used the amount of time
+    since the last event as an indicator of activity and allowed other
+    devices to grab control of the pointer if more than 100 milliseconds had
+    elapsed since the cursor's last event. Although this seems to work well,
+    there is another indicator of activity which should not be ignored:
+    button state. If a user is pressing a button on their cursor tool, it
+    should be considered active even if the 100ms timeout has been exceeded.
+    Not doing so could potentially allow another tool to grab "active"
+    status and have our driver send a button-up message and stop an in-
+    progress drag.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5f5479a4f195e11a7bb708019afb299cf7a29741
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Mon Oct 31 18:14:24 2016 -0700
+
+    Lazily allocate pressure curve table
+    
+    Now that the pressure curve contains 65K points it takes up quite a bit
+    of memory, especially considering that the pressure curve may not need
+    to exist for some devices (e.g. pads) and may just be the default linear
+    curve even for those where it should exist. To reduce the amount of
+    memory used, we now lazily allocate space for the pressure curve tables
+    only when they are set to a non-default curve.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 3e56ce4429d9053da3b873f8717b830e3bdc5ea4
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Tue Jun 14 10:42:29 2016 -0700
+
+    Increase full-scale pressure range from 0..2047 to 0..65535
+    
+    The driver has historically normalized the pressure range of all kernel
+    devices to 0..2047 rather than using their native range to keep things
+    like the application of the pressure curve simple. Pens that report more
+    than 2048 pressure levels are also normalized down to this range though,
+    reducing their precision. In order to accomodate the new 8K pen (and any
+    future pens with even higher precision), this patch bumps up the full-
+    scale range to be 0..65535. This number was chosen both because it far
+    exceeds anything currently known about, and also because it matches the
+    normalization range used over the wire by the Wayland tablet protocol.
+    
+    Note that the WACOM_PROP_PRESSURE_THRESHOLD value has been tied to the
+    normalized (2048-level) pressure range for some time, meaning that we
+    cannot simply change the range without causing a change in the perceived
+    threshold for users. To ensure compatibility, the value is interpreted
+    as a fraction of 2048 and then scaled to the actual normalization range.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 54c125b28479ff88903647c2dce1d49daa3402df
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Fri Oct 7 09:20:34 2016 -0700
+
+    Read TouchRing axis range from kernel instead of hardcoding
+    
+    The TouchRing on the MobileStudio Pro has a range of only 0-35 instead
+    of 0-17 like prior devices. Because we hardcode an assumed range, the
+    driver mistakenly believes the jump from 35 to 0 (or 0 to 35, depending
+    on direction) when the user completes a revolution is actually caused
+    by the user reversing their finger direction. By reading the range from
+    the kernel, we can avoid this situation.
+    
+    Note that the ABS_WHEEL axis is also used by (legacy) combined pen/pad
+    devices with a range corresponding to the puck fingerwheel. We need to
+    be careful to not read the value in these cases since it would lead to
+    erroneous behavior in existing setups. Devices with a range range
+    different from 0-71 will hopefully not be widely used on kernels prior
+    to 3.17 where pen and pad were split into seperate devices since there
+    is no way (short of peeking at the VID:PID or name) to have them work
+    correctly in the combined case.
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Ping Cheng <pingc@wacom.com>
+
+commit b61d1711e9a2d6c647341e8ea0119521fd200d62
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Aug 11 13:47:35 2016 +1000
+
+    Make DEVICE_CLOSE a noop
+    
+    The server guarantees that DEVICE_OFF is called for any previously enabled
+    device, so we don't really have anything to do here. And since the input
+    thread addition to the server we can't safely call xf86RemoveEnabledDevice()
+    twice for the same device.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Ping Cheng <pingc@wacom.com>
+
+commit bae283c8c91f6e064e727887da79e91e5c7c5f19
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Aug 9 15:39:46 2016 +1000
+
+    Lock the input thread while creating a new device
+    
+    Don't process events while we're creating a new device so we don't start
+    processing events halfway between the new device being set up.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Ping Cheng <pingc@wacom.com>
+
+commit ce912d8bba63faabe5d60a9f467c714511a835f7
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Jun 2 09:23:57 2016 +1000
+
+    Handle the input ABI 23 - removal of xf86BlockSIGIO
+    
+    Input is now handled in a separate thread in the server when a device is added
+    through xf86AddEnabledDevice(). Previously that was in a sigio handler and we
+    have a bunch of workarounds to avoid calling things from within the signal
+    handler. With the new API these aren't needed, so split those callbacks and
+    call them directly where needed.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Tested-by: Ping Cheng <pingc@wacom.com>
+
+commit 97d86e150c23108b4dbc99dbb8338aec60eea39c
+Author: Ping Cheng <pinglinux@gmail.com>
+Date:   Fri Aug 5 18:27:55 2016 -0700
+
+    xsetwacom: refer KeySyms defined by keysymdef.h in man page
+    
+    xsetwacom accepts keys in X11 KeySyms format. To make the interface
+    user friendly, we mapped a set of modifiers to aliases that can be
+    recognized by most users. But, there are a few less recognizable or
+    confusing keys/modifiers left. This patch tells users where to find
+    the X11 KeySyms they are looking for.
+    
+    Signed-off-by: Ping Cheng <pingc@wacom.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit d54db63e716317bb336ddf444ab8034353913db7
+Author: Ping Cheng <pingc@wacom.com>
+Date:   Thu Aug 4 10:49:52 2016 -0700
+
+    xsetwacom: Add return to special key alias list
+    
+    return is a popular key assignment which was not added to the
+    special key list. Although Return would work since it is the
+    key name, we add return anyway to make users happy.
+    
+    Enter/enter for KP_Enter could have achieved the same purpose.
+    But, it confuses users (and some developers ;).
+    
+    Signed-off-by: Ping Cheng <pingc@wacom.com>
+    Tested-by: Kelly Price <strredwolf@gmail.com>
+
 commit b16b68a9302ce19226d78eed0e1fcb530f372506
 Author: Jason Gerecke <killertofu@gmail.com>
 Date:   Fri May 13 15:32:27 2016 -0700
@@ -5842,7 +6156,7 @@ Date:   Sun Oct 9 15:01:43 2011 +0200
     "%zd" in order to avoid the format string warning at compile time:
     
     xsetwacom.c:787:2: warning: format '%d' expects argument of type 'int',
-    	but argument 2 has type 'long unsigned int' [-Wformat]
+            but argument 2 has type 'long unsigned int' [-Wformat]
     
     Signed-off-by: Eduard Hasenleithner <eduard@hasenleithner.at>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
@@ -6612,7 +6926,7 @@ Date:   Sun Jun 5 08:06:46 2011 +1000
     
     Conflicts:
     
-    	src/wcmXCommand.c
+            src/wcmXCommand.c
     
     Reported-by: Andrzej Giniewicz <gginiu@gmail.com>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
@@ -7403,7 +7717,7 @@ Date:   Mon Apr 4 13:29:59 2011 +1000
     
     Conflicts:
     
-    	src/wcmXCommand.c
+            src/wcmXCommand.c
     
     Reported-by: Michal Suchanek <hramrach@centrum.cz>
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
@@ -10939,10 +11253,10 @@ Date:   Mon Oct 11 12:43:46 2010 +1000
     The three fields (name, id and type) are separated by tab characters to ease
     parsing. Example output is:
     
-    Wacom Intuos4 6x9 eraser        	id: 12	type: ERASER
-    Wacom Intuos4 6x9 cursor        	id: 13	type: CURSOR
-    Wacom Intuos4 6x9 pad           	id: 14	type: PAD
-    Wacom Intuos4 6x9 stylus        	id: 15	type: STYLUS
+    Wacom Intuos4 6x9 eraser                id: 12  type: ERASER
+    Wacom Intuos4 6x9 cursor                id: 13  type: CURSOR
+    Wacom Intuos4 6x9 pad                   id: 14  type: PAD
+    Wacom Intuos4 6x9 stylus                id: 15  type: STYLUS
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
@@ -14036,7 +14350,7 @@ Date:   Fri Jun 18 07:59:11 2010 +1000
     
     Conflicts:
     
-    	src/wcmCommon.c
+            src/wcmCommon.c
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
 
@@ -14101,7 +14415,7 @@ Date:   Thu Jun 10 16:27:47 2010 +1000
     
     Conflicts:
     
-    	src/wcmCommon.c
+            src/wcmCommon.c
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Reviewed-by: Ping Cheng <pinglinux@gmail.com>
@@ -14301,7 +14615,7 @@ Date:   Wed Jun 9 16:04:56 2010 +1000
     
     Conflicts:
     
-    	src/xf86Wacom.c
+            src/xf86Wacom.c
     
     Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
     Reviewed-by: Ping Cheng <pinglinux@gmail.com>
@@ -14509,8 +14823,8 @@ Date:   Thu Jun 3 14:02:37 2010 +1000
     Merge branch 'master' of git://people.freedesktop.org/~gnadon/xf86-input-wacom
     
     Conflicts:
-    	configure.ac
-    	man/Makefile.am
+            configure.ac
+            man/Makefile.am
 
 commit 370cd8bcce46a091da2479fdb8171b1b58a8616c
 Author: Peter Hutterer <peter.hutterer@who-t.net>
@@ -17693,7 +18007,7 @@ Date:   Mon Dec 14 09:01:42 2009 +1000
     Merge branch 'xsetwacom'
     
     Conflicts:
-    	src/wcmXCommand.c
+            src/wcmXCommand.c
 
 commit bffe7c23591c0d1ae70e73a27fab669d4a190ade
 Author: Przemo Firszt <przemo@firszt.eu>
@@ -19197,9 +19511,9 @@ Date:   Wed Oct 28 14:28:40 2009 +1000
     The default output for the driver loading is:
     
     (II) Module wacom: vendor="X.Org Foundation"
-    	compiled for 1.6.99.901, module version = 0.9.1
-    	Module class: X.Org XInput Driver
-    	ABI class: X.Org XInput driver, version 7.0
+            compiled for 1.6.99.901, module version = 0.9.1
+            Module class: X.Org XInput Driver
+            ABI class: X.Org XInput driver, version 7.0
     
     where the module version is now filled in by the package version set in
     configure. An extra identification string is superfluous.
