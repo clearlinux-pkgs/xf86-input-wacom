@@ -1,3 +1,106 @@
+commit 4bf1f36791ba5a2ad7e59fe7257f0893b40f4e7d
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Mon Jun 26 15:08:47 2017 -0700
+
+    wacom 0.35.0
+
+commit 60edf6341fed25ec0df6d07be6ade31ca960d607
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Fri Jun 16 14:12:15 2017 -0700
+
+    wacom 0.34.99.1
+    
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+
+commit 7bfbf8ed5a82e78a8235275c15e8934b02879f37
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Fri Jun 16 14:50:19 2017 -0700
+
+    test: Update test_normalize_pressure to work with maxCurve
+    
+    Commit d958ab79d2 changes the driver's pressure normalization functions
+    to use a variable "maxCurve" which defines the upper limit of pressure
+    values to be emitted by the driver, rather than using FILTER_PRESSURE_RES
+    directly. The tests were never updated to take this into account and
+    fail due to maxCurve never being set.
+    
+    This patch has the normalize_pressure test set the value of maxCurve.
+    While we're at it, we have the test verify that multiple values of
+    maxCurve work as expected.
+    
+    Fixes: d958ab79d2 (Introduce "Pressure2K" config option for incompatible software)
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+
+commit d958ab79d21b57141415650daac88f9369a1c861
+Author: Jason Gerecke <killertofu@gmail.com>
+Date:   Wed May 31 10:57:12 2017 +1000
+
+    Introduce "Pressure2K" config option for incompatible software
+    
+    It appears that some software may not be entirely compatible with the
+    expanded 65K pressure level range that was introduced in version 0.34.0.
+    Although our driver advertises the larger range in XI2 (and toolkits
+    like GTK+2/3 and Qt3/4/5 make use of it), there have been reports of
+    other software (e.g. The Foundry's "NUKE") misbehaving.
+    
+    As a workaround, this patch introduces a new boolean config option named
+    "Pressure2K". If enabled, it causes the driver to revert to its prior
+    behavior of using a pressure range of 0-2047. This option is disabled by
+    default, but can be turned on by adding the following configuration
+    snippet to a new file in the /etc/X11/xorg.conf.d directory:
+    
+    Section "InputClass"
+        Identifier "Wacom pressure compatibility"
+        MatchDriver "wacom"
+        Option "Pressure2K" "true"
+    EndSection
+    
+    Ref: https://sourceforge.net/p/linuxwacom/mailman/message/35857403/
+    Ref: 3e56ce4429 (Increase full-scale pressure range from 0..2047 to 0..65535)
+    Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 0318b1cda79261d73f04676dd662f98c84711747
+Author: Aaron Armstrong Skomra <skomra@gmail.com>
+Date:   Tue May 2 09:48:56 2017 -0700
+
+    Support recent display devices on older kernels
+    
+    Older kernels like 2.6.30 will end up with touches
+    interpreted as relative events unless these devices
+    are explicitly added.
+    
+    Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 252f276ea9f1a2543a7504857b702b4e50e90508
+Author: Sebastian Reuße <seb@wirrsal.net>
+Date:   Wed May 10 20:16:07 2017 +0200
+
+    xsetwacom: use XkbGetMap instead of XkbGetKeyboard
+    
+    XkbGetMap is more robust in cases where certain keyboard description components
+    are missing. XkbGetKeyboard will fail when any component cannot be resolved;
+    since XkbAllComponentsMask is requested, any missing component will result in
+    the call returning NULL. Since we don’t necessarily need all components (e.g.,
+    keyboard geometry, keymap names), we use XkbGetMap instead.
+    
+    Signed-off-by: Sebastian Reuße <seb@wirrsal.net>
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7f6658af6f1a4e22adddd6fd931edb8870dbafc0
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Mar 13 08:50:53 2017 +1000
+
+    Fix build with #ifdef DEBUG disabled
+    
+    Introduced in de650d6224
+    
+    Reported-by: Matt Turner <mattst88@gmail.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
 commit 267e74cd1325f250185ced951914220bc4287ecf
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Thu Mar 9 08:30:39 2017 +1000
