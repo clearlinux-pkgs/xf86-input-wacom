@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x0DAD9D6C60D924AC (killertofu@gmail.com)
 #
 Name     : xf86-input-wacom
-Version  : 0.35.0
-Release  : 9
-URL      : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.35.0.tar.bz2
-Source0  : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.35.0.tar.bz2
-Source99 : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.35.0.tar.bz2.sig
+Version  : 0.36.0
+Release  : 10
+URL      : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2
+Source0  : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2
+Source99 : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2.sig
 Summary  : X.Org Wacom Tablet driver.
 Group    : Development/Tools
 License  : GPL-2.0
@@ -80,16 +80,16 @@ lib components for the xf86-input-wacom package.
 
 
 %prep
-%setup -q -n xf86-input-wacom-0.35.0
+%setup -q -n xf86-input-wacom-0.36.0
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1507171081
+export SOURCE_DATE_EPOCH=1517518036
 %configure --disable-static
-make V=1  %{?_smp_mflags}
+make  %{?_smp_mflags}
 
 %check
 export LANG=C
@@ -99,7 +99,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1507171081
+export SOURCE_DATE_EPOCH=1517518036
 rm -rf %{buildroot}
 %make_install
 

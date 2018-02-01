@@ -1,0 +1,3 @@
+Configure miss: lshal
+Configure miss: hal-set-property
+Configure miss: if HAL preprobe quirk should be installed
