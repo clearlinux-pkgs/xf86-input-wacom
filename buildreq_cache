@@ -1,0 +1,4 @@
+0.36.0
+doxygen
+graphviz
+pkgconfig(xorg-macros)
