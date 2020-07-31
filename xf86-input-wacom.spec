@@ -6,7 +6,7 @@
 #
 Name     : xf86-input-wacom
 Version  : 0.36.0
-Release  : 19
+Release  : 20
 URL      : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2
 Source0  : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2
 Source99 : https://sourceforge.net/projects/linuxwacom/files/xf86-input-wacom/xf86-input-wacom-0.36.0.tar.bz2.sig
